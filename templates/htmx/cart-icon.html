@@ -1,0 +1,13 @@
+{% with request.session.cart|length as cart_count %}    
+<a class="nav-link position-relative text-white cart-icon" 
+    href="{% url 'cart:detail' %}" hx-swap-oob="outerHTML:.cart-icon">
+    <i class="bi bi-cart3 fs-4"></i>
+
+    {% if cart_count and cart_count > 0 %}
+    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+        style="font-size: 0.65rem;">
+        {{ cart_count }}
+    </span>
+    {% endif %}
+</a>
+{% endwith %}

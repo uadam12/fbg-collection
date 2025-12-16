@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Edit Profile{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-body">
+
+                    <h3 class="mb-4 text-center">Edit Profile</h3>
+
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        <!-- Profile Picture Preview -->
+                        <div class="mb-3 text-center">
+                            <img id="profilePreview" src="{{ user.picture }}"
+                                alt="Profile Picture" class="rounded-circle border"
+                                style="width:120px; height:120px; object-fit:cover;">
+                        </div>
+
+                        <!-- File input -->
+                        <div class="mb-3">
+                            <div class="mb-4">
+                                <label class="form-label fw-semibold">Profile Picture</label>
+                                <input type="file" name="profile_picture" class="form-control" accept="image/*" >
+                                <small class="text-muted">Leave empty to keep existing image</small>
+                            </div>
+                        </div>
+
+                        <!-- First Name & Last Name -->
+                        <div class="row mb-3">
+                            <div class="col">
+                                {% include 'partials/field.html' with field=form.first_name %}
+                            </div>
+                            <div class="col">
+                                {% include 'partials/field.html' with field=form.last_name %}
+                            </div>
+                        </div>
+
+                        <!-- Phone Number -->
+                        <div class="mb-3">
+                            {% include 'partials/field.html' with field=form.phone_number %}
+                        </div>
+
+                        <!-- Address -->
+                        <div class="mb-3">
+                            {% include 'partials/field.html' with field=form.address %}
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-dark w-100">
+                                <i class="bi bi-check-circle"></i> Save Changes
+                            </button>
+                            <a href="{% url 'user:profile' %}" class="btn btn-outline-secondary w-100">
+                                Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Live preview JS -->
+<script>
+    const profileInput = document.getElementById("id_profile_picture");
+    const profilePreview = document.getElementById("profilePreview");
+
+    profileInput?.addEventListener("change", e => {
+        const [file] = profileInput.files;
+        if (file) {
+            profilePreview.src = URL.createObjectURL(file);
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,54 @@
+<footer class="bg-dark text-light pt-4 mt-5">
+    <div class="container">
+        <div class="row g-4">
+
+            <!-- App Info -->
+            <div class="col-md-4">
+                <h5 class="fw-bold">
+                    FBG <span class="text-danger">Collection</span>
+                </h5>
+                <p class="small">
+                    Premium caps and fashion accessories.
+                </p>
+            </div>
+
+            <!-- Contact Info -->
+            <div class="col-md-4">
+                <h6 class="fw-bold">Contact</h6>
+                <ul class="list-unstyled small">
+                    <li class="mb-2">
+                        <i class="bi bi-telephone-fill me-2"></i>
+                        08085403019
+                    </li>
+                    <li class="mb-2">
+                        <i class="bi bi-envelope-fill me-2"></i>
+                        example@mail.com
+                    </li>
+                    <li>
+                        <i class="bi bi-geo-alt-fill me-2"></i>
+                        Mashidimami company,<br>
+                        Along Biu–Damboa Road, Maiduguri
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Quick Links -->
+            <div class="col-md-4">
+                <h6 class="fw-bold">Quick Links</h6>
+                <ul class="list-unstyled small">
+                    <li><a href="{% url 'home' %}#shop" class="text-decoration-none text-light">Shop</a></li>
+                    <li><a href="{% url 'about' %}" class="text-decoration-none text-light">About Us</a></li>
+                    <li><a href="{% url 'contact' %}" class="text-decoration-none text-light">Contact</a></li>
+                </ul>
+            </div>
+
+        </div>
+
+        <hr class="border-secondary mt-4">
+
+        <!-- Bottom -->
+        <div class="text-center pb-3 small">
+            &copy; {% now 'Y' %} FBG Collection. All rights reserved.
+        </div>
+    </div>
+</footer>

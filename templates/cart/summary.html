@@ -1,0 +1,56 @@
+{% load humanize %}
+
+<div class="card shadow-sm">
+    <div class="card-header">
+        <h5 class="card-title text-center">Order Summary</h5>
+    </div>
+
+    <div class="card-body">
+        <!-- Items count -->
+        <div class="d-flex justify-content-between mb-2">
+            <span>Items</span>
+            <span id="cart-items-count">{{ cart.items_count }} caps</span>
+        </div>
+
+        <!-- Shipping -->
+        <div class="d-flex justify-content-between mb-3">
+            <span>Shipping</span>
+            <span class="text-success">Free</span>
+        </div>
+
+        <!-- Total -->
+        <div class="d-flex justify-content-between fw-bold fs-5 mb-4">
+            <span>Total</span>
+            <span id="cart-total-amount">
+                ₦{{ cart.total_amount|intcomma }}
+            </span>
+        </div>
+
+        <hr>
+
+        <form action="{% url 'cart:order' %}" method="post">
+            {% csrf_token %}
+
+            <!-- Shipping address -->
+            <div class="mb-4">
+                <label for="shipping-address" class="form-label fw-semibold">
+                    Shipping Address
+                </label>
+                <textarea id="shipping-address" name="shipping-address" class="form-control" rows="5"
+                    placeholder="Enter your full delivery address" required>{{ user.address|default:'demo' }}</textarea>
+            </div>
+
+            <!-- Checkout -->
+            <button class="btn btn-success w-100 mb-2">
+                Checkout Now
+            </button>
+        </form>
+
+        <!-- Clear cart -->
+        <button class="btn btn-outline-secondary w-100" hx-post="{% url 'cart:clear' %}" hx-target="#cart-items"
+            hx-swap="outerHTML">
+            Clear cart
+        </button>
+
+    </div>
+</div>

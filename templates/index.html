@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load static humanize %}
+
+{% block title %}Welcome | BG Caps{% endblock %}
+
+{% block content %}
+    <!-- SHOP SECTION -->
+<main id="shop" class="container-fluid">
+    <div class="container mb-4 text-center">
+        <h2 class="fw-bold">BG Caps Shop</h2>
+        <p class="text-muted">
+            Find the perfect cap to match your style
+        </p>
+    </div>
+
+    {% include "partials/shop.html" %}
+</main>
+
+    {% include "partials/image-modal.html" %}
+
+{% endblock %}

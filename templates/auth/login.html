@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}BG Caps | Login{% endblock %}
+
+{% block content %}
+<div class="container py-5" style="max-width: 420px">
+
+    <div class="card shadow-sm">
+        <div class="card-body p-4">
+
+            <!-- Header -->
+            <div class="text-center mb-4">
+                <i class="bi bi-lock-fill fs-1 text-dark"></i>
+                <h4 class="mt-2">Sign In</h4>
+                <p class="text-muted mb-0">Access your dashboard</p>
+            </div>
+
+            <!-- Login Form -->
+            <form method="post" novalidate>
+                {% csrf_token %}
+
+                <!-- Username -->
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Email address</label>
+                    <input type="text" name="username" class="form-control" placeholder="Enter your username" required
+                        autofocus>
+                </div>
+
+                <!-- Password -->
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <label class="form-label fw-semibold mb-0">Password</label>
+                        <a href="{% url 'user:reset-password' %}" class="small text-decoration-none">
+                            Forgot password?
+                        </a>
+                    </div>
+
+                    <div class="input-group">
+                        <input type="password" name="password" id="password" class="form-control password-field"
+                            placeholder="Enter your password" required>
+                        <button type="button" class="btn btn-secondary toggle-password" tabindex="-1">
+                            <i class="bi bi-eye" id="toggleIcon"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Errors -->
+                {% if form.errors %}
+                <div class="alert alert-danger py-2">
+                    Invalid username or password.
+                </div>
+                {% endif %}
+
+                <!-- Submit -->
+                <button class="btn btn-dark w-100">
+                    <i class="bi bi-box-arrow-in-right"></i> Login
+                </button>
+            </form>
+
+            <!-- Register -->
+            <div class="text-center mt-4">
+                <span class="text-muted">Don’t have an account?</span>
+                <a href="{% url 'user:register' %}" class="fw-semibold text-decoration-none">
+                    Create one
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<script src="{% static 'js/toggle-password.js' %}"></script>
+{% endblock %}

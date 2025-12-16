@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}Available Categories{% endblock title %}
+    
+
+{% block content %}
+<div class="container py-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1>Categories</h1>
+        <a href="{% url 'cap:create-category' %}" class="btn btn-dark">
+            <i class="bi bi-plus-circle"></i> Add Category
+        </a>
+    </div>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Total Caps</th>
+                <th class="text-end" width="100">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for category in categories %}
+                <tr>
+                    <td>{{ category.name }}</td>
+                    <td>{{ category.total_caps }}</td>
+                    <td class="text-end">
+                        <a href="{% url 'cap:update-category' category.id %}" class="btn btn-sm btn-outline-primary">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                        <a href="{% url 'cap:delete-category' category.id %}" class="btn btn-sm btn-outline-danger">
+                            <i class="bi bi-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="2" class="text-center text-muted">
+                        No categories yet
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+{% endblock %}

@@ -1,0 +1,23 @@
+<form method="get" class="row g-2 mb-3">
+    <div class="col-md-3">
+        <input type="text" name="q" class="form-control" placeholder="Search order / customer"
+            value="{{ request.GET.q }}">
+    </div>
+
+    <div class="col-md-3">
+        <select name="status" class="form-select">
+            <option value="">All Statuses</option>
+            {% for value, label in statuses %}
+            <option value="{{ value }}" {% if value == request.GET.status %}selected{% endif %}>
+                {{ label }}
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="col-md-2">
+        <button class="btn btn-secondary w-100">
+            <i class="bi bi-funnel"></i> Filter
+        </button>
+    </div>
+</form>

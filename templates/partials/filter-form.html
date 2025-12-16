@@ -1,0 +1,14 @@
+<form class="input-group mb-3 mt-1">
+    <select class="form-select" name="{{ name }}" aria-label="Filter by {{ name|capfirst }}">
+        <option value="">{{ placeholder }}</option>
+        {% for item in data %}
+        <option value="{{ item.pk }}" {% if item.pk|stringformat:"s" == selected %}selected{% endif %}>
+            {{ item }}
+        </option>
+        {% endfor %}
+    </select>
+
+    <button class="btn btn-secondary" type="submit">
+        <i class="bi bi-funnel"></i> Filter
+    </button>
+</form>

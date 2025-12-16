@@ -1,0 +1,53 @@
+{% load humanize %}
+
+{% if oob %}
+<span id="cart-total-amount" hx-swap-oob="true" class="fw-semibold">
+    ₦{{ cart.total_amount|intcomma }}
+</span>
+{% endif %}
+
+
+<div class="row align-items-center gap-3" hx-target="this" hx-swap="outerHTML">
+
+    <!-- Amount -->
+    <div class="col-sm text-center text-md-end">
+        <div class="fw-semibold">
+            ₦{{ item.amount|intcomma }}
+        </div>
+        <small class="text-muted">
+            ₦{{ item.cap.price|intcomma }} each
+        </small>
+    </div>
+
+    <!-- Quantity Controls -->
+    <div class="col-sm">
+        <div class="d-flex justify-content-center justify-content-md-start align-items-center gap-1">
+
+            <!-- Decrease -->
+            <button class="btn btn-outline-secondary btn-sm" hx-post="{% url 'cart:decrease' item.cap.id %}"
+                aria-label="Decrease quantity">
+                <i class="bi bi-dash"></i>
+            </button>
+
+            <!-- Quantity -->
+            <span class="fw-semibold px-1">{{ item.quantity }}</span>
+
+            <!-- Increase -->
+            <button class="btn btn-outline-secondary btn-sm" hx-post="{% url 'cart:increase' item.cap.id %}"
+                aria-label="Increase quantity">
+                <i class="bi bi-plus"></i>
+            </button>
+
+            <!-- Remove -->
+            <button class="btn btn-outline-danger btn-sm ms-2" 
+                hx-post="{% url 'cart:remove' item.cap.id %}"
+                hx-target="closest .cart-item"
+                aria-label="Remove item">
+                <i class="bi bi-trash"></i>
+            </button>
+        </div>
+
+    </div>
+
+
+</div>

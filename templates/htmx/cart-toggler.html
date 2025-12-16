@@ -1,0 +1,19 @@
+{% if oob %}
+{% include 'htmx/cart-icon.html' %}
+{% endif %}
+
+{% with cap_id=cap.pk|stringformat:"s" cart=request.session.cart %}
+<button class="btn btn-outline-{% if cap_id in cart %}danger{% else %}dark{% endif %}" type="button"
+  hx-post="{% url 'cart:toggle' cap_id %}" hx-disabled-elt="this" hx-swap="outerHTML" hx-indicator="#cap-{{ cap_id }}">
+
+  <span class="htmx-indicator" id="cap-{{ cap_id }}">
+    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+    <span class="visually-hidden">
+      {% if cap_id in cart %}Removing from{% else %}Adding to{% endif %} cart…
+    </span>
+  </span>
+
+  <i class="bi bi-trash"></i>
+  {% if cap_id in cart %}Remove from{% else %}Add to{% endif %} cart
+</button>
+{% endwith %}

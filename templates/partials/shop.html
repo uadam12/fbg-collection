@@ -1,0 +1,105 @@
+<div class="row">
+
+    <!-- Mobile Filter Toggle -->
+    <div class="d-lg-none mb-3">
+        <button
+            class="btn btn-outline-dark"
+            type="button"
+            data-bs-toggle="offcanvas"
+            data-bs-target="#filterSidebar"
+            aria-controls="filterSidebar">
+            <i class="bi bi-funnel"></i> Filters
+        </button>
+    </div>
+
+    <!-- Filter Sidebar -->
+    <aside class="col-lg-3">
+        <div
+            tabindex="-1" id="filterSidebar"
+            class="offcanvas-lg offcanvas-start"
+            aria-labelledby="filterSidebarLabel">
+
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="filterSidebarLabel">Filter Caps</h5>
+            </div>
+
+            <div class="offcanvas-body">
+                <form
+                    method="get"
+                    hx-get="."
+                    hx-target="#caps-list"
+                    hx-push-url="true"
+                    hx-trigger="change delay:300ms, submit">
+
+                    <!-- Categories -->
+                    <fieldset class="mb-4">
+                        <legend class="form-label">Categories</legend>
+                        {% for category in categories %}
+                            <div class="form-check">
+                                <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    id="category-{{ category.pk }}"
+                                    name="category"
+                                    value="{{ category.pk }}">
+                                <label
+                                    class="form-check-label"
+                                    for="category-{{ category.pk }}">
+                                    {{ category.name }}
+                                </label>
+                            </div>
+                        {% endfor %}
+                    </fieldset>
+
+                    <!-- Price Range -->
+                    <fieldset class="mb-4">
+                        <legend class="form-label">Price Range</legend>
+                        <div class="row g-2">
+                            <div class="col">
+                                <div class="input-group">
+                                    <span class="input-group-text">₦</span>
+                                    <input
+                                        type="number"
+                                        class="form-control"
+                                        name="min_price"
+                                        placeholder="From"
+                                        min="0">
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="input-group">
+                                    <span class="input-group-text">₦</span>
+                                    <input
+                                        type="number"
+                                        class="form-control"
+                                        name="max_price"
+                                        placeholder="To"
+                                        min="0">
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <!-- Search -->
+                    <div class="mb-3">
+                        <input
+                            type="search"
+                            class="form-control"
+                            name="search"
+                            placeholder="Search caps">
+                    </div>
+
+                    <button type="submit" class="btn btn-dark w-100">
+                        <i class="bi bi-search"></i> Apply Filters
+                    </button>
+                </form>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Products Section -->
+    <section class="col-lg-9" id="caps-list" hx-swap="innerHTML">
+        {% include "htmx/caps-list.html" %}
+    </section>
+
+</div>

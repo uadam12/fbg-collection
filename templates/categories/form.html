@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{% if category %}Edit{% else %}Create{% endif %} Category
+{% endblock title %}
+
+{% block content %}
+<div class="container py-4" style="max-width: 500px">
+
+    <h2 class="mb-3">
+        {% if category %}Edit{% else %}Create{% endif %} Category
+    </h2>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <label class="form-label">Category name</label>
+            <input value="{{ category.name|default:'' }}" type="text" name="name" class="form-control"
+                placeholder="Enter category name" required>
+        </div>
+
+
+        <!-- Actions -->
+        <div class="d-flex gap-2">
+            <button class="btn btn-dark w-100">
+                <i class="bi bi-check-circle"></i> Save
+            </button>
+            <a href="{% url 'cap:categories' %}" class="btn btn-outline-secondary w-100">
+                Cancel
+            </a>
+        </div>
+    </form>
+
+</div>
+{% endblock %}

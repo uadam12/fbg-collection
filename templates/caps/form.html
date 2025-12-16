@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {% if cap %}Edit Cap{% else %}Create Cap{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container py-4" style="max-width: 600px">
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+
+            <h4 class="mb-4 text-center">
+                {% if cap %}Edit Cap{% else %}Create New Cap{% endif %}
+            </h4>
+
+            {% if cap and cap.image %}
+                <div class="text-center mb-3">
+                    <img src="{{ cap.image.url }}" class="img-fluid rounded" style="max-height: 180px;">
+                </div>
+            {% endif %}
+
+            <form method="post" enctype="multipart/form-data" novalidate>
+                {% csrf_token %}
+
+                <!-- Name -->
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Cap Name</label>
+                    <input type="text"
+                           name="name"
+                           class="form-control"
+                           placeholder="Enter cap name"
+                           value="{{ cap.name|default_if_none:'' }}"
+                           required>
+                </div>
+
+                <!-- Category -->
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Category</label>
+                    <select name="category" class="form-select" required>
+                        <option value="">-- Select Category --</option>
+                        {% for category in categories %}
+                            <option value="{{ category.id }}"
+                                {% if cap and cap.category_id == category.id %}selected{% endif %}>
+                                {{ category.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Price -->
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Price</label>
+                    <input type="number"
+                           name="price"
+                           class="form-control"
+                           step="0.01"
+                           min="0"
+                           placeholder="0.00"
+                           value="{{ cap.price|default_if_none:'' }}"
+                           required>
+                </div>
+
+                <!-- Image -->
+                <div class="mb-4">
+                    <label class="form-label fw-semibold">Cap Image</label>
+                    <input
+                        type="file" name="image" class="form-control" accept="image/*"
+                        {% if not cap or not cap.image %}required{% endif %}>
+
+                    {% if cap and cap.image %}
+                        <small class="text-muted">Leave empty to keep existing image</small>
+                    {% endif %}
+                </div>
+
+                <!-- Actions -->
+                <div class="d-flex gap-2">
+                    <button class="btn btn-dark w-100">
+                        <i class="bi bi-check-circle"></i> Save
+                    </button>
+                    <a href="{% url 'cap:list' %}" class="btn btn-outline-secondary w-100">
+                        Cancel
+                    </a>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+</div>
+{% endblock %}

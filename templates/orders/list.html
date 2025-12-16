@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% load humanize %}
+
+{% block title %}Orders{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1>{{ statuses|yesno:"Available,My"}} Orders</h1>
+    </div>
+
+    <!-- Filters -->   
+    {% if statuses %} {% include 'orders/filter.html' %} {% endif %}
+
+    <!-- Orders Table -->
+    <div class="table-responsive">
+        <table class="table table-bordered align-middle table-hover">
+            <thead class="table-light">
+                <tr>
+                    <th>Customer</th>
+                    <th>Status</th>
+                    <th>Caps</th>
+                    <th>Ordered</th>
+                    <th class="text-end" width="100">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                <tr>
+                    <td>
+                        {{ order.customer }}
+                    </td>
+                    <td>
+                        {% include 'orders/status.html' %}
+                    </td>
+                    <td>
+                        {{ order.caps.count }} cap{{ order.caps.count|pluralize }}
+                    </td>
+                    <td>{{ order.ordered_at|naturaltime }}</td>
+                    <td class="text-end">
+                        <a href="{% url user.is_staff|yesno:'order:detail,cart:my-order' order.id %}"
+                           class="btn btn-sm btn-outline-dark">
+                            <i class="bi bi-eye"></i>
+                        </a>
+
+                        {% if user.is_staff %}
+                        <a href="{% url 'order:update' order.id %}"
+                           class="btn btn-sm btn-outline-primary">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center text-muted">
+                        No orders found
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
+    {% include "partials/pagination.html" %}
+
+</div>
+{% endblock %}

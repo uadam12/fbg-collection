@@ -1,0 +1,10 @@
+{% include 'htmx/cart-icon.html' %}
+{% load humanize %}
+
+<span id="cart-items-count" hx-swap-oob="true">
+    {{ cart.items_count }}
+</span>
+
+<span id="cart-total-amount" hx-swap-oob="true">
+    {{ cart.total_amount|intcomma }}
+</span>

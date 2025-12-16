@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+<div class="container py-5">
+
+    <!-- Page Header -->
+    <div class="text-center mb-5">
+        <h2 class="fw-bold">About FBG Collection</h2>
+        <p class="text-muted">
+            Quality caps. Classic style. Trusted brand.
+        </p>
+    </div>
+
+    <!-- About Section -->
+    <div class="row align-items-center mb-5">
+        <div class="col-md-6 mb-4 mb-md-0">
+            <h4 class="fw-bold mb-3">Who We Are</h4>
+            <p>
+                <strong>FBG Collection</strong> is a fashion brand dedicated to providing
+                high-quality and stylish caps for everyday wear. Our products are carefully
+                selected to match modern trends while maintaining comfort and durability.
+            </p>
+            <p>
+                We proudly serve customers in Maiduguri and beyond, delivering caps that
+                reflect confidence, culture, and creativity.
+            </p>
+        </div>
+
+        <div class="col-md-6 text-center">
+            <i class="bi bi-shop display-1 text-dark"></i>
+        </div>
+    </div>
+
+    <!-- Mission & Vision -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-6">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold">
+                        <i class="bi bi-bullseye me-2"></i>Our Mission
+                    </h5>
+                    <p class="card-text">
+                        To provide affordable, stylish, and high-quality caps that enhance
+                        personal style and confidence.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold">
+                        <i class="bi bi-eye me-2"></i>Our Vision
+                    </h5>
+                    <p class="card-text">
+                        To become a trusted fashion brand recognized for quality,
+                        reliability, and customer satisfaction.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Why Choose Us -->
+    <div class="text-center mb-4">
+        <h4 class="fw-bold">Why Choose Us</h4>
+    </div>
+
+    <div class="row g-4 text-center">
+        <div class="col-md-4">
+            <i class="bi bi-award fs-1 mb-3"></i>
+            <h6 class="fw-bold">Quality Products</h6>
+            <p class="small text-muted">
+                Durable and fashionable caps made to last.
+            </p>
+        </div>
+
+        <div class="col-md-4">
+            <i class="bi bi-truck fs-1 mb-3"></i>
+            <h6 class="fw-bold">Reliable Service</h6>
+            <p class="small text-muted">
+                Fast and dependable service you can trust.
+            </p>
+        </div>
+
+        <div class="col-md-4">
+            <i class="bi bi-people fs-1 mb-3"></i>
+            <h6 class="fw-bold">Customer Focused</h6>
+            <p class="small text-muted">
+                Your satisfaction is always our priority.
+            </p>
+        </div>
+    </div>
+
+    <!-- Contact CTA -->
+    <div class="text-center mt-5">
+        <p class="fw-semibold">
+            Want to know more or place an order?
+        </p>
+        <a href="{% url 'contact' %}" class="btn btn-dark">
+            Contact Us
+        </a>
+    </div>
+
+</div>
+{% endblock content %}
