@@ -1,12 +1,14 @@
-from django.urls import reverse
-from django.db import transaction
 from django.db.models import Prefetch
 from django.core.paginator import Paginator
 from django.http import HttpRequest, HttpResponse
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
+from django.urls import reverse
 
+
+from cart.services import make_order
 from cart.utils import Cart, cap_cat_qs
 from order.models import Cap, Order, CapOrder
 
@@ -23,29 +25,21 @@ def cart_detail(request: HttpRequest) -> HttpResponse:
 @login_required
 @require_POST
 def cart_order(request: HttpRequest):
-    with transaction.atomic():
-        cart = Cart(request)
-        # Create the order
-        order = Order.objects.create(
-            customer=request.user, 
-            shipping_address=str(request.POST.get('shipping-address'))
-        )
-        
-        # Create the related CapOrder objects
-        cap_orders = [
-            CapOrder(
-                order=order,
-                cap=item.get("cap"),
-                quantity=item.get('quantity'),
-            ) for item in cart.items
-        ]
-        # Bulk create for efficiency
-        CapOrder.objects.bulk_create(cap_orders)
-        cart.clear()
+    cart = Cart(request)
 
-        return redirect(reverse('cart:my-order', kwargs={
-            "order_id": order.pk
-        }))
+    if not cart.items:
+        messages.warning(request, "Your cart is empty.")
+        return redirect("home")
+
+    order = make_order(
+        cart, request.user,
+        request.POST.get("shipping-address", "")
+    )
+
+    if order:
+        # Feedback and redirect
+        messages.success(request, "Order created successfully! Proceed to payment.")
+        return redirect("cart:my-order", order_id=order.pk)
 
 @login_required
 def my_orders(request: HttpRequest):
@@ -63,15 +57,29 @@ def my_orders(request: HttpRequest):
         "orders": paginator.get_page(page)
     })
 
+prefetch = Prefetch('cap_orders', CapOrder.objects.select_related('cap__category'))
+
 @login_required
 def my_order(request: HttpRequest, order_id: int):
-    order_qs = Order.objects.prefetch_related(Prefetch(
-        'cap_orders', CapOrder.objects.select_related('cap__category')
-    ))
-    order = get_object_or_404(order_qs, pk=order_id, customer=request.user)
+    qs = (
+        Order.objects
+        .prefetch_related(prefetch)
+        .select_related('payment')
+    )
+    order = get_object_or_404(qs, pk=order_id, customer=request.user)
+    payment = order.payment
+
+    if not payment.checkout_url:
+        callback_path = reverse("payment:verify", kwargs={ 
+            "order_id": order.pk
+        })
+        payment.init_url(
+            request.build_absolute_uri(callback_path),
+            { 'order_id': order.pk }
+        )
 
     return render(request, 'orders/detail.html', {
-        'order': order
+        'order': order, 'payment': payment
     })
 
 @login_required

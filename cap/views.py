@@ -1,4 +1,5 @@
 from django.http import HttpRequest
+from django.contrib import messages
 from django.core.paginator import Paginator
 from django.shortcuts import render, redirect, get_object_or_404
 from app.decorators import staff_required
@@ -33,6 +34,7 @@ def create_cap(request: HttpRequest):
             price=request.POST.get('price'),
             image=request.FILES.get('image')
         )
+        messages.success(request, "Cap created successfully!!!")
         return redirect('cap:list')
 
     return render(request, 'caps/form.html', {
@@ -52,6 +54,7 @@ def update_cap(request: HttpRequest, pk):
         if request.FILES.get('image'):
             cap.image = request.FILES.get('image')
         cap.save()
+        messages.success(request, "Cap updated successfully!!!")
         return redirect('cap:list')
 
     return render(request, 'caps/form.html', {
@@ -66,6 +69,7 @@ def delete_cap(request: HttpRequest, pk):
 
     if request.method == 'POST':
         cap.delete()
+        messages.success(request, "Cap deleted successfully!!!")
         return redirect('cap:list')
 
     return render(request, 'delete.html', {

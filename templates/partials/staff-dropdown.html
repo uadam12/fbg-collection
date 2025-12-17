@@ -1,0 +1,45 @@
+{% if user.is_staff %}
+<li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle d-flex align-items-center gap-1"
+       href="#"
+       id="staffDropdown"
+       role="button"
+       data-bs-toggle="dropdown"
+       aria-expanded="false">
+        <i class="bi bi-gear"></i> Manage
+    </a>
+
+    <ul class="dropdown-menu dropdown-menu-dark bg-dark shadow"
+        aria-labelledby="staffDropdown">
+
+        <li>
+            <a class="dropdown-item d-flex align-items-center gap-2"
+               href="{% url 'cap:categories' %}">
+                <i class="bi bi-tags"></i> Categories
+            </a>
+        </li>
+
+        <li>
+            <a class="dropdown-item d-flex align-items-center gap-2"
+               href="{% url 'cap:list' %}">
+                <i class="bi bi-suitcase"></i> Caps
+            </a>
+        </li>
+
+        <li>
+            <a class="dropdown-item d-flex align-items-center gap-2"
+               href="{% url 'order:list' %}">
+                <i class="bi bi-bag-check"></i> Orders
+            </a>
+        </li>
+
+        <li>
+            <a class="dropdown-item d-flex align-items-center gap-2"
+               href="{% url 'payment:list' %}">
+                <i class="bi bi-credit-card"></i> Payments
+            </a>
+        </li>
+
+    </ul>
+</li>
+{% endif %}

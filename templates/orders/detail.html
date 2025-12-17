@@ -1,29 +1,29 @@
-{% extends 'base.html' %} {% load humanize %}
-
+{% extends 'base.html' %}
+{% load humanize %}
 
 {% block content %}
 <div class="container my-5">
+
+    <!-- Header -->
     <h2 class="mb-4 d-flex justify-content-between align-items-center">
         <span><i class="bi bi-bag-check-fill"></i> Order Details</span>
 
-        {% comment %} Display status with color-coded badge {% endcomment %}
         {% if order.status == "pending" %}
-        <span class="badge bg-secondary text-capitalize">{{ order.status }}</span>
+            <span class="badge bg-secondary text-capitalize">{{ order.status }}</span>
         {% elif order.status == "processing" %}
-        <span class="badge bg-info text-dark text-capitalize">{{ order.status }}</span>
+            <span class="badge bg-info text-dark text-capitalize">{{ order.status }}</span>
         {% elif order.status == "shipping" %}
-        <span class="badge bg-primary text-capitalize">{{ order.status }}</span>
+            <span class="badge bg-primary text-capitalize">{{ order.status }}</span>
         {% elif order.status == "delivered" %}
-        <span class="badge bg-success text-capitalize">{{ order.status }}</span>
+            <span class="badge bg-success text-capitalize">{{ order.status }}</span>
         {% elif order.status == "canceled" %}
-        <span class="badge bg-danger text-capitalize">{{ order.status }}</span>
+            <span class="badge bg-danger text-capitalize">{{ order.status }}</span>
         {% elif order.status == "refunded" %}
-        <span class="badge bg-warning text-dark text-capitalize">{{ order.status }}</span>
+            <span class="badge bg-warning text-dark text-capitalize">{{ order.status }}</span>
         {% elif order.status == "returned" %}
-        <span class="badge bg-dark text-capitalize">{{ order.status }}</span>
+            <span class="badge bg-dark text-capitalize">{{ order.status }}</span>
         {% endif %}
     </h2>
-
 
     <!-- Customer Information -->
     <div class="card mb-4 shadow-sm">
@@ -33,27 +33,27 @@
 
         <div class="card-body">
             <div class="row g-3 align-items-center">
-                <!-- Customer Image -->
                 <div class="col-auto">
-                    
-                    {% with 120 as img_size %}
-                    <img src="{{ order.customer.picture }}" alt="{{ order.customer }}"
-                        class="rounded-circle" width="{{ img_size}}" height="{{ img_size}}">
-                    {% endwith %}
-                        
+                    <img src="{{ order.customer.picture }}"
+                         alt="{{ order.customer }}"
+                         class="rounded-circle"
+                         width="120" height="120">
                 </div>
 
-                <!-- Customer Info -->
                 <div class="col">
                     <p class="mb-1"><strong>Name:</strong> {{ order.customer }}</p>
                     <p class="mb-1"><strong>Email:</strong> {{ order.customer.email }}</p>
-                    <p class="mb-1"><strong>Order Date:</strong> {{ order.ordered_at|date:"l, F d, Y H:i" }}</p>
-                    <p class="mb-0"><strong>Shipping Address:</strong> {{ order.shipping_address }}</p>
+                    <p class="mb-1">
+                        <strong>Order Date:</strong>
+                        {{ order.ordered_at|date:"l, F d, Y H:i" }}
+                    </p>
+                    <p class="mb-0">
+                        <strong>Shipping Address:</strong>
+                        {{ order.shipping_address }}
+                    </p>
                 </div>
             </div>
         </div>
-
-
     </div>
 
     <!-- Order Items -->
@@ -61,39 +61,59 @@
         <div class="card-header bg-success text-white">
             <i class="bi bi-cart-fill"></i> Caps Bought
         </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-hover align-middle">
-                    <thead>
-                        <tr>
-                            <th scope="col">Cap</th>
-                            <th scope="col">Category</th>
-                            <th scope="col">Quantity</th>
-                            <th scope="col">Unit Price</th>
-                            <th scope="col">Total Price</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for item in order.cap_orders.all %}
-                        <tr>
-                            <td>{{ item.cap.name }}</td>
-                            <td>{{ item.cap.category.name }}</td>
-                            <td>{{ item.quantity }}</td>
-                            <td>₦{{ item.cap.price|intcomma }}</td>
-                            <td>₦{{ item.total_price|intcomma }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+
+        <div class="card-body table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Cap</th>
+                        <th>Category</th>
+                        <th>Qty</th>
+                        <th>Unit Price</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in order.cap_orders.all %}
+                    <tr>
+                        <td>{{ item.cap.name }}</td>
+                        <td>{{ item.cap.category.name }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>₦{{ item.cap.price|intcomma }}</td>
+                        <td>₦{{ item.total_price|intcomma }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
 
-    <!-- Order Total -->
+    <!-- Order Summary & Payment -->
     <div class="card shadow-sm">
-        <div class="card-body d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">₦ Total:</h5>
-            <h5 class="mb-0">₦{{ order.total_price|intcomma }}</h5>
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="mb-0">Order Total</h5>
+                <h4 class="mb-0 text-success">
+                    ₦{{ order.total_price|intcomma }}
+                </h4>
+            </div>
+
+            <hr>
+
+            <!-- Proceed to Payment -->
+            <div class="d-flex justify-content-end">
+                {% if order.status == "pending" %}
+                    <a href="{{ payment.checkout_url }}"
+                       class="btn btn-lg btn-success">
+                        <i class="bi bi-credit-card"></i>
+                        Proceed to Payment
+                    </a>
+                {% else %}
+                    <button class="btn btn-lg btn-secondary" disabled>
+                        Payment Not Available
+                    </button>
+                {% endif %}
+            </div>
         </div>
     </div>
 

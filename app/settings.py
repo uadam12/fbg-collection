@@ -1,4 +1,7 @@
+import os
 from pathlib import Path
+from dotenv import load_dotenv
+from django.contrib.messages import constants as messages
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -7,13 +10,18 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
+load_dotenv()
+
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-_l*81zy+j*+#8n@&da*nu&k^f7un$676d1($pr%@u9hu)o20pe'
+SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = os.environ.get("DJANGO_DEBUG", "False") == "True"
 
-ALLOWED_HOSTS = ['utech.pythonanywhere.com']
+ALLOWED_HOSTS = [
+    'localhost', '127.0.0.1', 
+    'utech.pythonanywhere.com'
+]
 
 
 # Application definition
@@ -27,7 +35,7 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     
     'core', 'user', 'cap',
-    'order', 'cart'
+    'payment', 'order', 'cart',
 ]
 
 MIDDLEWARE = [
@@ -117,3 +125,14 @@ AUTHENTICATION_BACKENDS = [
     'user.backends.EmailBackend',
     'django.contrib.auth.backends.ModelBackend',
 ]
+
+PAYSTACK_SECRET_KEY = os.environ.get("PAYSTACK_SECRET_KEY")
+PAYSTACK_PUBLIC_KEY = os.environ.get("PAYSTACK_PUBLIC_KEY")
+
+MESSAGE_TAGS = {
+    messages.DEBUG: "bg-secondary text-white",
+    messages.INFO: "bg-info text-white",
+    messages.SUCCESS: "bg-success text-white",
+    messages.WARNING: "bg-warning text-dark",
+    messages.ERROR: "bg-danger text-white",
+}

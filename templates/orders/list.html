@@ -40,7 +40,7 @@
                     </td>
                     <td>{{ order.ordered_at|naturaltime }}</td>
                     <td class="text-end">
-                        <a href="{% url user.is_staff|yesno:'order:detail,cart:my-order' order.id %}"
+                        <a href="{% url statuses|yesno:'order:detail,cart:my-order' order.id %}"
                            class="btn btn-sm btn-outline-dark">
                             <i class="bi bi-eye"></i>
                         </a>

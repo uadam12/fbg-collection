@@ -37,81 +37,11 @@
 
                 {% if user.is_authenticated %}
 
-                {% if user.is_staff %}
-                <li class="nav-item">
-                    <a href="{% url 'cap:categories' %}" class="nav-link d-flex align-items-center gap-1">
-                        <i class="bi bi-tags"></i> Categories
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a href="{% url 'cap:list' %}" class="nav-link d-flex align-items-center gap-1">
-                        <i class="bi bi-suitcase"></i> Caps
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a href="{% url 'order:list' %}" class="nav-link d-flex align-items-center gap-1">
-                        <i class="bi bi-bag-check"></i> Orders
-                    </a>
-                </li>
-                {% endif %}
+                <!-- Staff Dropdown -->
+                {% include 'partials/staff-dropdown.html' %}
 
                 <!-- User Dropdown -->
-                <li class="nav-item dropdown" title="{{ user.get_full_name|default:user.email }}">
-                    <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" href="#" role="button"
-                        data-bs-toggle="dropdown" aria-expanded="false">
-
-                        <!-- Profile picture -->
-                        <img src="{{ user.picture }}" alt="{{ user.get_full_name|default:user.email }}"
-                            class="rounded-circle border" style="width:32px; height:32px; object-fit:cover;">
-                    </a>
-
-                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark bg-dark shadow-sm">
-                        <!-- Profile -->
-                        <li>
-                            <a class="dropdown-item d-flex align-items-center gap-2" href="{% url 'user:profile' %}">
-                                <i class="bi bi-person"></i> Profile
-                            </a>
-                        </li>
-
-                        <!-- My Orders -->
-                        <li>
-                            <a class="dropdown-item d-flex align-items-center gap-2" href="{% url 'cart:my-orders' %}">
-                                <i class="bi bi-bag-check"></i> My Orders
-                            </a>
-                        </li>
-
-                        <!-- Change Password -->
-                        <li>
-                            <a class="dropdown-item d-flex align-items-center gap-2" href="#">
-                                <i class="bi bi-key"></i> Change Password
-                            </a>
-                        </li>
-
-                        <!-- Settings -->
-                        <li>
-                            <a class="dropdown-item d-flex align-items-center gap-2" href="{% url 'user:edit-profile' %}">
-                                <i class="bi bi-gear"></i> Settings
-                            </a>
-                        </li>
-
-                        <li>
-                            <hr class="dropdown-divider bg-secondary">
-                        </li>
-
-                        <!-- Logout -->
-                        <li>
-                            <form action="{% url 'user:logout' %}" method="post" class="m-0">
-                                {% csrf_token %}
-                                <button type="submit" class="dropdown-item d-flex align-items-center gap-2 text-danger">
-                                    <i class="bi bi-box-arrow-right"></i> Logout
-                                </button>
-                            </form>
-                        </li>
-                    </ul>
-                </li>
-
+                {% include 'partials/user-dropdown.html' %}
 
                 {% else %}
 
