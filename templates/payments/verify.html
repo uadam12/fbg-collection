@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Verify Payment{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white text-center">
+                    <h4 class="mb-0">
+                        <i class="bi bi-credit-card-2-front"></i> Verify Payment
+                    </h4>
+                </div>
+                <div class="card-body">
+                    {% if order %}
+                    <p class="mb-3">
+                        You're about to verify payment for order <strong>#{{ order.id }}</strong>.
+                    </p>
+                    <form method="get">
+                        <div class="mb-3">
+                            <label for="trxref" class="form-label">Transaction Reference</label>
+                            <input type="text" id="trxref" name="trxref" class="form-control"
+                                placeholder="Enter your transaction reference" required>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm">
+                                <a href="{% url 'payment:detail' pk=order.payment.pk %}" class="btn btn-secondary w-100">
+                                    <i class="bi bi-arrow-left-circle"></i> Back to details
+                                </a>
+                            </div>
+                            <div class="col-sm">
+                                <button type="submit" class="btn btn-success w-100">
+                                    <i class="bi bi-check-circle"></i> Verify payment
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                    {% else %}
+                    <p class="text-danger text-center">
+                        Order details not found.
+                    </p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

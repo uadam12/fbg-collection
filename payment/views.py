@@ -14,7 +14,11 @@ def payments_list(request: HttpRequest):
     """
     List all payments for staff users.
     """
-    payments = Payment.objects.select_related("customer").all()
+    payments = Payment.objects.select_related("customer", "order")
+    status = request.GET.get('status')
+
+    if status:
+        payments = payments.filter(status=status)
 
     return render(request, "payments/list.html", {
         "payments": payments,
@@ -22,38 +26,55 @@ def payments_list(request: HttpRequest):
     })
 
 
-@staff_required
+@login_required
 def payment_detail(request: HttpRequest, pk: int):
     """
     Display payment details for a single payment.
     """
-    payment = get_object_or_404(Payment, pk=pk)
+    payment = get_object_or_404(
+        Payment.objects.filter(customer=request.user) 
+        if not request.user.is_staff else Payment, 
+        pk=pk
+    )
 
     return render(request, "payments/detail.html", {
         "payment": payment,
     })
 
-@staff_required
+@login_required
 def verify_payment(request: HttpRequest, order_id: int):
     """
     Verify a payment via Paystack and update its status.
     """
-    order = get_object_or_404(
-        Order.objects.select_related('payment'),
-        pk = order_id
-    )
+
+    # Base queryset
+    qs = Order.objects.select_related('payment')
+
+    # Restrict to user's orders if not staff
+    if not request.user.is_staff:
+        qs = qs.filter(customer=request.user)
+
+    # Get the order or 404
+    order = get_object_or_404(qs, pk=order_id)
     payment = order.payment
 
+    # If already verified, inform the user
     if payment.verified:
-        messages.info(request, "Payment already verified.")
+        messages.info(request, "This payment has already been verified.")
+        return redirect(reverse("payment:detail", kwargs={"pk": payment.pk}))
+
+    # Get transaction reference from query parameters
+    trx_ref = request.GET.get("trxref")
+    if not trx_ref:
+        # No reference provided, render verification page
+        return render(request, 'payments/verify.html', {"order": order})
+
+    # Verify payment
+    if payment.verify(trx_ref):
+        order.status = Order.STATUS_PROCESSING
+        order.save(update_fields=['status'])
+        messages.success(request, "Payment verified successfully.")
     else:
-        verified = payment.verify(request.GET.get("trxref", ''))
+        messages.error(request, "Payment verification failed. Please try again.")
 
-        if verified:
-            order.status = Order.STATUS_PROCESSING
-            order.save(update_fields=['status'])
-            messages.success(request, f"Payment verified successfully.")
-        else:
-            messages.error(request, f"Payment your verification failed.")
-
-    return redirect(reverse("payment:detail", kwargs={"pk": order.payment.pk}))
+    return redirect(reverse("payment:detail", kwargs={"pk": payment.pk}))

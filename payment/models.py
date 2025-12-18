@@ -27,7 +27,7 @@ class Payment(models.Model):
     )
     reference = models.CharField(
         max_length=100, unique=True,
-        blank=True, editable=False,
+        null=True, editable=False,
         help_text="Unique payment reference"
     )
     amount = models.PositiveIntegerField(
@@ -73,7 +73,7 @@ class Payment(models.Model):
 
     @property
     def verified(self) -> bool:
-        return bool(str(self.reference).strip())
+        return bool((self.reference or '').strip())
 
     def verify(self, reference: str) -> bool:
         """

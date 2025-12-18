@@ -14,52 +14,57 @@
     </div>
 
     <!-- Filter by Category -->
-    {% include 'partials/filter-form.html' with name='category' selected=request.GET.category placeholder="All Categories" data=categories %}
+    
+    {% with selected=request.GET.category placeholder="All Categories" data=categories %}
+    {% include 'partials/filter-form.html' with name='category' %}
+    {% endwith %}
 
-    <table class="table table-bordered align-middle table-hover">
-        <thead class="table-light">
-            <tr>
-                <th width="80">Image</th>
-                <th>Name</th>
-                <th>Category</th>
-                <th>Price</th>
-                <th class="text-end" width="100">Actions</th>
-            </tr>
-        </thead>
+    <div class="table-responsive">
+        <table class="table table-bordered align-middle table-hover">
+            <thead class="table-light">
+                <tr>
+                    <th width="80">Image</th>
+                    <th>Name</th>
+                    <th>Category</th>
+                    <th>Price</th>
+                    <th class="text-end" width="100">Actions</th>
+                </tr>
+            </thead>
 
-        <tbody>
-            {% for cap in caps %}
-            <tr>
-                <td>
-                    {% if cap.image %}
+            <tbody>
+                {% for cap in caps %}
+                <tr>
+                    <td>
+                        {% if cap.image %}
                         <img src="{{ cap.image.url }}" width="60" class="rounded img-thumbnail cap-image"
-                             data-bs-toggle="modal" data-bs-target="#imageModal"
-                             data-name="{{ cap.name }}" data-src="{{ cap.image.url }}" style="cursor:pointer;">
-                    {% else %}
+                            data-bs-toggle="modal" data-bs-target="#imageModal" data-name="{{ cap.name }}"
+                            data-src="{{ cap.image.url }}" style="cursor:pointer;">
+                        {% else %}
                         <span class="text-muted">—</span>
-                    {% endif %}
-                </td>
-                <td>{{ cap.name }}</td>
-                <td>{{ cap.category.name }}</td>
-                <td>₦{{ cap.price|intcomma }}</td>
-                <td class="text-end">
-                    <a href="{% url 'cap:update' cap.id %}" class="btn btn-sm btn-outline-primary">
-                        <i class="bi bi-pencil"></i>
-                    </a>
-                    <a href="{% url 'cap:delete' cap.id %}" class="btn btn-sm btn-outline-danger">
-                        <i class="bi bi-trash"></i>
-                    </a>
-                </td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="5" class="text-center text-muted">
-                    No caps yet
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+                        {% endif %}
+                    </td>
+                    <td>{{ cap.name }}</td>
+                    <td>{{ cap.category.name }}</td>
+                    <td>₦{{ cap.price|intcomma }}</td>
+                    <td class="text-end">
+                        <a href="{% url 'cap:update' cap.id %}" class="btn btn-sm btn-outline-primary">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                        <a href="{% url 'cap:delete' cap.id %}" class="btn btn-sm btn-outline-danger">
+                            <i class="bi bi-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center text-muted">
+                        No caps yet
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
     {% include 'partials/pagination.html' with page_obj=caps %}
 </div>

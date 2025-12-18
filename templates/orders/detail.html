@@ -5,15 +5,9 @@
 <div class="container my-4 my-lg-5">
 
     <!-- Header -->
-    <div class="d-flex flex-column flex-md-row
-                justify-content-between align-items-start align-items-md-center
-                mb-4 gap-2">
-        <h2 class="mb-0">
-            <i class="bi bi-bag-check-fill"></i> Order Details
-        </h2>
-
-        {% include 'orders/status.html' with large=True %}
-    </div>
+    <h2 class="mb-4">
+        <i class="bi bi-bag-check-fill"></i> Order Details
+    </h2>
 
     <!-- Customer Information -->
     <div class="card mb-4 shadow-sm">
@@ -24,18 +18,17 @@
         <div class="card-body">
             <div class="row g-3 align-items-center text-center text-md-start">
                 <div class="col-12 col-md-auto">
-                    <img src="{{ order.customer.picture }}"
-                         alt="{{ order.customer }}"
-                         class="rounded-circle img-fluid"
-                         style="max-width:120px;">
+                    <img src="{{ order.customer.picture }}" alt="{{ order.customer }}" class="rounded-circle img-fluid"
+                        style="max-width:120px;">
                 </div>
 
                 <div class="col">
                     <p class="mb-1"><strong>Name:</strong> {{ order.customer }}</p>
                     <p class="mb-1"><strong>Email:</strong> {{ order.customer.email }}</p>
+                    <p class="mb-1"><strong>Status:</strong> {% include 'orders/status.html' %}</p>
                     <p class="mb-1">
-                        <strong>Order Date:</strong>
-                        {{ order.ordered_at|date:"l, F d, Y H:i" }}
+                        <strong>Transaction date:</strong>
+                        {{ order.ordered_at|date:"l, F d, Y h:i A" }}
                     </p>
                     <p class="mb-0">
                         <strong>Shipping Address:</strong>
@@ -59,8 +52,8 @@
                         <tr>
                             <th>Cap</th>
                             <th>Category</th>
-                            <th class="text-center">Qty</th>
-                            <th>Unit Price</th>
+                            <th class="text-center">Quantity</th>
+                            <th>Price</th>
                             <th>Total</th>
                         </tr>
                     </thead>
@@ -69,7 +62,7 @@
                         <tr>
                             <td>{{ item.cap.name }}</td>
                             <td>{{ item.cap.category.name }}</td>
-                            <td class="text-center">{{ item.quantity }}</td>
+                            <td class="text-center">{{ item.quantity }} caps</td>
                             <td>₦{{ item.cap.price|intcomma }}</td>
                             <td>₦{{ item.total_price|intcomma }}</td>
                         </tr>
@@ -84,23 +77,25 @@
     <div class="card shadow-sm">
         <div class="card-body">
             <div class="d-flex flex-column flex-sm-row
-                        justify-content-between align-items-start align-items-sm-center
-                        mb-3">
+                        justify-content-between align-items-start align-items-sm-center">
                 <h5 class="mb-2 mb-sm-0">Order Total</h5>
                 <h4 class="mb-0 text-success">
                     ₦{{ order.total_price|intcomma }}
                 </h4>
             </div>
 
-            <hr>
-
             <!-- Proceed to Payment -->
             {% if order.status == "pending" %}
-            <div class="d-grid d-sm-flex justify-content-sm-end">
-                <a href="{{ payment.checkout_url }}"
-                   class="btn btn-success btn-lg w-100 w-sm-auto">
-                    <i class="bi bi-credit-card"></i>
-                    Proceed to Payment
+            <hr>
+            <div class="text-end mt-3">
+                <!-- Pay Now Button -->
+                <a href="{{ payment.checkout_url }}" class="btn btn-success btn-lg me-2">
+                    <i class="bi bi-credit-card"></i> Pay Now
+                </a>
+
+                <!-- Verify Payment Button -->
+                <a href="{% url 'payment:verify' order.id %}" class="btn btn-primary btn-lg">
+                    <i class="bi bi-check-circle"></i> I have paid
                 </a>
             </div>
             {% endif %}

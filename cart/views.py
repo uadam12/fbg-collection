@@ -57,26 +57,20 @@ def my_orders(request: HttpRequest):
         "orders": paginator.get_page(page)
     })
 
-prefetch = Prefetch('cap_orders', CapOrder.objects.select_related('cap__category'))
-
 @login_required
 def my_order(request: HttpRequest, order_id: int):
-    qs = (
-        Order.objects
-        .prefetch_related(prefetch)
-        .select_related('payment')
+    order = get_object_or_404(
+        Order.objects.prefetch_related(
+            Prefetch('cap_orders', CapOrder.objects.select_related('cap__category'))
+        ).select_related('payment'), pk=order_id, customer=request.user
     )
-    order = get_object_or_404(qs, pk=order_id, customer=request.user)
     payment = order.payment
 
     if not payment.checkout_url:
-        callback_path = reverse("payment:verify", kwargs={ 
-            "order_id": order.pk
-        })
-        payment.init_url(
-            request.build_absolute_uri(callback_path),
-            { 'order_id': order.pk }
-        )
+        kwargs = { "order_id": order.pk }
+        callback_path = reverse("payment:verify", kwargs=kwargs)
+        callback_url = request.build_absolute_uri(callback_path)
+        payment.init_url(request.build_absolute_uri(callback_url), kwargs)
 
     return render(request, 'orders/detail.html', {
         'order': order, 'payment': payment
