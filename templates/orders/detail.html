@@ -2,28 +2,18 @@
 {% load humanize %}
 
 {% block content %}
-<div class="container my-5">
+<div class="container my-4 my-lg-5">
 
     <!-- Header -->
-    <h2 class="mb-4 d-flex justify-content-between align-items-center">
-        <span><i class="bi bi-bag-check-fill"></i> Order Details</span>
+    <div class="d-flex flex-column flex-md-row
+                justify-content-between align-items-start align-items-md-center
+                mb-4 gap-2">
+        <h2 class="mb-0">
+            <i class="bi bi-bag-check-fill"></i> Order Details
+        </h2>
 
-        {% if order.status == "pending" %}
-            <span class="badge bg-secondary text-capitalize">{{ order.status }}</span>
-        {% elif order.status == "processing" %}
-            <span class="badge bg-info text-dark text-capitalize">{{ order.status }}</span>
-        {% elif order.status == "shipping" %}
-            <span class="badge bg-primary text-capitalize">{{ order.status }}</span>
-        {% elif order.status == "delivered" %}
-            <span class="badge bg-success text-capitalize">{{ order.status }}</span>
-        {% elif order.status == "canceled" %}
-            <span class="badge bg-danger text-capitalize">{{ order.status }}</span>
-        {% elif order.status == "refunded" %}
-            <span class="badge bg-warning text-dark text-capitalize">{{ order.status }}</span>
-        {% elif order.status == "returned" %}
-            <span class="badge bg-dark text-capitalize">{{ order.status }}</span>
-        {% endif %}
-    </h2>
+        {% include 'orders/status.html' with large=True %}
+    </div>
 
     <!-- Customer Information -->
     <div class="card mb-4 shadow-sm">
@@ -32,12 +22,12 @@
         </div>
 
         <div class="card-body">
-            <div class="row g-3 align-items-center">
-                <div class="col-auto">
+            <div class="row g-3 align-items-center text-center text-md-start">
+                <div class="col-12 col-md-auto">
                     <img src="{{ order.customer.picture }}"
                          alt="{{ order.customer }}"
-                         class="rounded-circle"
-                         width="120" height="120">
+                         class="rounded-circle img-fluid"
+                         style="max-width:120px;">
                 </div>
 
                 <div class="col">
@@ -62,37 +52,41 @@
             <i class="bi bi-cart-fill"></i> Caps Bought
         </div>
 
-        <div class="card-body table-responsive">
-            <table class="table table-hover align-middle">
-                <thead class="table-light">
-                    <tr>
-                        <th>Cap</th>
-                        <th>Category</th>
-                        <th>Qty</th>
-                        <th>Unit Price</th>
-                        <th>Total</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for item in order.cap_orders.all %}
-                    <tr>
-                        <td>{{ item.cap.name }}</td>
-                        <td>{{ item.cap.category.name }}</td>
-                        <td>{{ item.quantity }}</td>
-                        <td>₦{{ item.cap.price|intcomma }}</td>
-                        <td>₦{{ item.total_price|intcomma }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+        <div class="card-body p-0 p-md-3">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Cap</th>
+                            <th>Category</th>
+                            <th class="text-center">Qty</th>
+                            <th>Unit Price</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in order.cap_orders.all %}
+                        <tr>
+                            <td>{{ item.cap.name }}</td>
+                            <td>{{ item.cap.category.name }}</td>
+                            <td class="text-center">{{ item.quantity }}</td>
+                            <td>₦{{ item.cap.price|intcomma }}</td>
+                            <td>₦{{ item.total_price|intcomma }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
     <!-- Order Summary & Payment -->
     <div class="card shadow-sm">
         <div class="card-body">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5 class="mb-0">Order Total</h5>
+            <div class="d-flex flex-column flex-sm-row
+                        justify-content-between align-items-start align-items-sm-center
+                        mb-3">
+                <h5 class="mb-2 mb-sm-0">Order Total</h5>
                 <h4 class="mb-0 text-success">
                     ₦{{ order.total_price|intcomma }}
                 </h4>
@@ -101,15 +95,15 @@
             <hr>
 
             <!-- Proceed to Payment -->
-            <div class="d-flex justify-content-end">
-                {% if order.status == "pending" %}
-                    <a href="{{ payment.checkout_url }}"
-                       class="btn btn-lg btn-success">
-                        <i class="bi bi-credit-card"></i>
-                        Proceed to Payment
-                    </a>
-                {% endif %}
+            {% if order.status == "pending" %}
+            <div class="d-grid d-sm-flex justify-content-sm-end">
+                <a href="{{ payment.checkout_url }}"
+                   class="btn btn-success btn-lg w-100 w-sm-auto">
+                    <i class="bi bi-credit-card"></i>
+                    Proceed to Payment
+                </a>
             </div>
+            {% endif %}
         </div>
     </div>
 

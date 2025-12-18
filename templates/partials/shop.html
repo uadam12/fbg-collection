@@ -1,27 +1,13 @@
 <div class="row">
-
-    <!-- Mobile Filter Toggle -->
-    <div class="d-lg-none mb-3">
-        <button
-            class="btn btn-outline-dark"
-            type="button"
-            data-bs-toggle="offcanvas"
-            data-bs-target="#filterSidebar"
-            aria-controls="filterSidebar">
-            <i class="bi bi-funnel"></i> Filters
-        </button>
-    </div>
-
     <!-- Filter Sidebar -->
     <aside class="col-lg-3">
-        <div
-            tabindex="-1" id="filterSidebar"
+        <div tabindex="-1" id="filterSidebar"
             class="offcanvas-lg offcanvas-start"
             aria-labelledby="filterSidebarLabel">
 
             <div class="offcanvas-header">
                 <h5 class="offcanvas-title" id="filterSidebarLabel">Filter Caps</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                <button type="button" class="btn-close" id="close-filter-menu-btn" aria-label="Close"></button>
             </div>
 
             <div class="offcanvas-body">
